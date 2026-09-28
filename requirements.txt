@@ -11,7 +11,7 @@ uvicorn==0.38.0
 SQLAlchemy==2.0.48
 
 # API / Form Handling
-python-multipart==0.0.26
+python-multipart==0.0.31
 
 # Data Processing
 pandas==2.3.3
