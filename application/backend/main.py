@@ -537,6 +537,12 @@ def ingest_current_sample():
                 detail=f"Sample not found: {jsonl}"
             )
 
+        # Reset the demo telemetry so repeated ingestion
+        # does not create duplicate sample data.
+        db.query(Alert).delete()
+        db.query(Event).delete()
+        db.commit()
+
         inserted = 0
 
         with open(jsonl, "r", errors="ignore") as f:
@@ -551,32 +557,86 @@ def ingest_current_sample():
                 except Exception:
                     continue
 
+                event_data = data.get("event_data") or {}
+
+                # The processed JSONL stores normalized metadata
+                # at the top level and Windows event fields inside
+                # event_data.
+                event_id = str(
+                    data.get("event_id")
+                    or data.get("EventID")
+                    or ""
+                )
+
+                provider = str(
+                    data.get("provider")
+                    or data.get("Provider")
+                    or ""
+                )
+
+                channel = str(
+                    data.get("channel")
+                    or data.get("Channel")
+                    or ""
+                )
+
+                image = str(
+                    event_data.get("Image")
+                    or event_data.get("ProcessName")
+                    or data.get("Image")
+                    or ""
+                )
+
+                command_line = str(
+                    event_data.get("CommandLine")
+                    or data.get("CommandLine")
+                    or ""
+                )
+
+                parent_image = str(
+                    event_data.get("ParentImage")
+                    or data.get("ParentImage")
+                    or ""
+                )
+
+                parent_command_line = str(
+                    event_data.get("ParentCommandLine")
+                    or data.get("ParentCommandLine")
+                    or ""
+                )
+
+                user = str(
+                    event_data.get("User")
+                    or event_data.get("SubjectUserName")
+                    or data.get("User")
+                    or ""
+                )
+
+                timestamp = str(
+                    data.get("timestamp")
+                    or data.get("UtcTime")
+                    or event_data.get("UtcTime")
+                    or data.get("TimeCreated")
+                    or ""
+                )
+
                 event = Event(
-                    event_id=str(
-                        data.get("EventID")
-                        or data.get("event_id")
-                        or ""
-                    ),
-                    provider=str(data.get("Provider", "")),
-                    channel=str(data.get("Channel", "")),
-                    image=str(data.get("Image", "")),
-                    command_line=str(data.get("CommandLine", "")),
-                    parent_image=str(data.get("ParentImage", "")),
-                    parent_command_line=str(
-                        data.get("ParentCommandLine", "")
-                    ),
-                    user=str(data.get("User", "")),
-                    timestamp=str(
-                        data.get("UtcTime")
-                        or data.get("TimeCreated")
-                        or ""
-                    ),
+                    event_id=event_id,
+                    provider=provider,
+                    channel=channel,
+                    image=image,
+                    command_line=command_line,
+                    parent_image=parent_image,
+                    parent_command_line=parent_command_line,
+                    user=user,
+                    timestamp=timestamp,
                     raw_json=json.dumps(data)
                 )
 
                 db.add(event)
                 db.flush()
 
+                # Run detections against the normalized event.
                 run_detection(db, event)
 
                 inserted += 1
