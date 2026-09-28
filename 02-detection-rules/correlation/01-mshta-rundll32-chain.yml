@@ -1,0 +1,20 @@
+title: MSHTA Followed By Rundll32 Process Chain
+id: 2d7a9c31-4e51-46b8-9f2c-1a5d7b2c2001
+status: experimental
+description: Correlation concept for MSHTA spawning Rundll32.
+tags:
+  - attack.defense-evasion
+  - attack.t1218.005
+  - attack.t1218.011
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_child:
+    EventID: 1
+    Image|endswith: '\rundll32.exe'
+    ParentImage|endswith: '\mshta.exe'
+  condition: selection_child
+falsepositives:
+  - Legitimate script or application automation
+level: high

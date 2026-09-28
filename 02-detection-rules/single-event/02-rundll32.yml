@@ -1,0 +1,21 @@
+title: Suspicious Rundll32 Execution
+id: 3e8e2f21-9a12-4a61-9a2b-2b7d0d1a1002
+status: experimental
+description: Detects Rundll32 execution in Windows process creation telemetry.
+references:
+  - https://attack.mitre.org/techniques/T1218/011/
+tags:
+  - attack.defense-evasion
+  - attack.t1218.011
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    EventID: 1
+    Image|endswith:
+      - '\rundll32.exe'
+  condition: selection
+falsepositives:
+  - Legitimate DLL execution
+level: medium

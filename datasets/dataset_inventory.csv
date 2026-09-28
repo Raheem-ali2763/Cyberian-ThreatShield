@@ -1,0 +1,4 @@
+dataset_name,source,type,status,notes
+EVTX-ATTACK-SAMPLES,OTRF,Windows EVTX,planned,Windows attack telemetry
+OTRF Security Datasets,OTRF,Security telemetry,planned,Threat hunting datasets
+Zeek telemetry,Public datasets,Network logs,planned,Network detection research

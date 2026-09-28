@@ -1,0 +1,21 @@
+title: WMIC Process Execution
+id: 6e3a8c21-5d41-49b7-9f2c-1a7d5b1a1015
+status: experimental
+description: Detects WMIC process execution.
+references:
+  - https://attack.mitre.org/techniques/T1047/
+tags:
+  - attack.execution
+  - attack.t1047
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    EventID: 1
+    Image|endswith:
+      - '\wmic.exe'
+  condition: selection
+falsepositives:
+  - Administrative WMI usage
+level: medium

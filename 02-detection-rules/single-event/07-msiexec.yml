@@ -1,0 +1,21 @@
+title: Msiexec Process Execution
+id: 2f5c7a81-4d22-4e6b-9c3a-1b7d8a1a1007
+status: experimental
+description: Detects Windows Installer execution.
+references:
+  - https://attack.mitre.org/techniques/T1218/007/
+tags:
+  - attack.defense-evasion
+  - attack.t1218.007
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    EventID: 1
+    Image|endswith:
+      - '\msiexec.exe'
+  condition: selection
+falsepositives:
+  - Legitimate software installation
+level: low

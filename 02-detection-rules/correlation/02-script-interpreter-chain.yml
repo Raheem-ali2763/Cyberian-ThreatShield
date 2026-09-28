@@ -1,0 +1,25 @@
+title: Suspicious Script Interpreter Process Chain
+id: 8a4c2e71-5d31-46b9-9f2c-1a7b3c2d2002
+status: experimental
+description: Detects a script interpreter relationship in process creation telemetry.
+tags:
+  - attack.execution
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    EventID: 1
+    ParentImage|endswith:
+      - '\mshta.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\powershell.exe'
+    Image|endswith:
+      - '\cmd.exe'
+      - '\rundll32.exe'
+      - '\powershell.exe'
+  condition: selection
+falsepositives:
+  - Administrative automation
+level: high

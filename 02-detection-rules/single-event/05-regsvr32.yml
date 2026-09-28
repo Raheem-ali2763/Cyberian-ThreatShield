@@ -1,0 +1,21 @@
+title: Regsvr32 Execution
+id: 1b3c4d51-6f72-4a31-8e2c-7d1a5b1a1005
+status: experimental
+description: Detects Regsvr32 process execution.
+references:
+  - https://attack.mitre.org/techniques/T1218/010/
+tags:
+  - attack.defense-evasion
+  - attack.t1218.010
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    EventID: 1
+    Image|endswith:
+      - '\regsvr32.exe'
+  condition: selection
+falsepositives:
+  - Software installation and registration
+level: medium

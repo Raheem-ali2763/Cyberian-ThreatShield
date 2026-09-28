@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Cyberian ThreatShield</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #07111f;
+    color: #e8f0f8;
+    font-family: Inter, Arial, sans-serif;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    background: #091625;
+    border-right: 1px solid #183047;
+    padding: 24px 16px;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.logo span {
+    color: #45d6c7;
+}
+
+.subtitle {
+    font-size: 11px;
+    color: #71869c;
+    margin-bottom: 35px;
+}
+
+.nav {
+    display: grid;
+    gap: 8px;
+}
+
+.nav div {
+    padding: 12px 14px;
+    border-radius: 9px;
+    color: #8296aa;
+    font-size: 14px;
+}
+
+.nav div.active {
+    background: #102d3d;
+    color: #55dfd0;
+}
+
+.main {
+    flex: 1;
+    padding: 28px;
+    overflow: auto;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.status {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: #67e8d8;
+    font-size: 13px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background: #48dfca;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #48dfca;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.card {
+    background: #0b1a2a;
+    border: 1px solid #173047;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.card-label {
+    color: #71869c;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card-value {
+    font-size: 32px;
+    font-weight: 800;
+    margin-top: 10px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 18px;
+}
+
+.panel {
+    background: #0b1a2a;
+    border: 1px solid #173047;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 18px;
+}
+
+.panel-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.alert {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px;
+    margin-bottom: 8px;
+    border-radius: 9px;
+    background: #0d2233;
+}
+
+.alert-name {
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.alert-tech {
+    color: #71869c;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.badge {
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.high {
+    background: #4c2028;
+    color: #ff8d9a;
+}
+
+.medium {
+    background: #4a3a1d;
+    color: #ffd47a;
+}
+
+.low {
+    background: #19372e;
+    color: #72e2b6;
+}
+
+.process {
+    font-family: monospace;
+    padding: 20px;
+    background: #06101b;
+    border-radius: 10px;
+    color: #55dfd0;
+    line-height: 2;
+}
+
+.process .child {
+    padding-left: 25px;
+}
+
+.process .child2 {
+    padding-left: 50px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    color: #71869c;
+    font-size: 11px;
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #183047;
+}
+
+td {
+    padding: 11px 10px;
+    border-bottom: 1px solid #11283b;
+    font-size: 12px;
+}
+
+button {
+    background: #45d6c7;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+@media(max-width: 900px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<aside class="sidebar">
+
+<div class="logo">
+🛡 CYBERIAN <span>THREATSHIELD</span>
+</div>
+
+<div class="subtitle">
+DETECTION COMMAND CENTER
+</div>
+
+<div class="nav">
+
+<div class="active">◈ Dashboard</div>
+<div>◉ Telemetry</div>
+<div>⚠ Detections</div>
+<div>⌁ Threat Hunting</div>
+<div>▣ Incidents</div>
+<div>◎ MITRE ATT&CK</div>
+<div>◌ IOC Investigation</div>
+<div>☷ Playbooks</div>
+
+</div>
+
+</aside>
+
+<main class="main">
+
+<div class="topbar">
+
+<div>
+<div class="title">Security Overview</div>
+<div style="color:#71869c;font-size:13px;margin-top:5px">
+Detection Engineering & Threat Hunting
+</div>
+</div>
+
+<div class="status">
+<div class="dot"></div>
+THREATSHIELD ONLINE
+</div>
+
+</div>
+
+
+<div class="cards">
+
+<div class="card">
+<div class="card-label">Telemetry Events</div>
+<div class="card-value" id="events">0</div>
+</div>
+
+<div class="card">
+<div class="card-label">Detection Alerts</div>
+<div class="card-value" id="alerts">0</div>
+</div>
+
+<div class="card">
+<div class="card-label">Sigma Rules</div>
+<div class="card-value" id="rules">0</div>
+</div>
+
+<div class="card">
+<div class="card-label">High Severity</div>
+<div class="card-value" id="high">0</div>
+</div>
+
+</div>
+
+
+<div class="grid">
+
+<div>
+
+<div class="panel">
+
+<div class="panel-title">
+Recent Detection Alerts
+</div>
+
+<div id="alerts-list">
+Loading...
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="panel-title">
+Recent Telemetry
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>TIME</th>
+<th>EVENT</th>
+<th>PROCESS</th>
+<th>PARENT</th>
+<th>USER</th>
+</tr>
+
+</thead>
+
+<tbody id="events-list">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div>
+
+<div class="panel">
+
+<div class="panel-title">
+Observed Process Chain
+</div>
+
+<div class="process">
+
+WINWORD.EXE
+
+<div class="child">
+↓ MSHTA.EXE
+</div>
+
+<div class="child2">
+↓ RUNDLL32.EXE
+</div>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="panel-title">
+Project Modules
+</div>
+
+<div style="line-height:2;color:#9eb0c1;font-size:13px">
+
+<div>🛡 Detection Rules <b id="rules2">0</b></div>
+<div>🔎 Threat Hunts <b id="hunts">2</b></div>
+<div>🚨 Incident Cases <b id="incidents">2</b></div>
+<div>📋 IR Playbooks <b id="playbooks">3</b></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+
+<script>
+
+async function loadDashboard() {
+
+    try {
+
+        const stats = await fetch("/api/stats")
+            .then(r => r.json());
+
+        document.getElementById("events")
+            .textContent = stats.events;
+
+        document.getElementById("alerts")
+            .textContent = stats.alerts;
+
+        document.getElementById("rules")
+            .textContent = stats.sigma_rules;
+
+        document.getElementById("rules2")
+            .textContent = stats.sigma_rules;
+
+        document.getElementById("high")
+            .textContent = stats.high;
+
+        const alerts = await fetch("/api/alerts")
+            .then(r => r.json());
+
+        const alertBox =
+            document.getElementById("alerts-list");
+
+        if (!alerts.length) {
+
+            alertBox.innerHTML =
+                "<div style='color:#71869c'>No alerts yet.</div>";
+
+        } else {
+
+            alertBox.innerHTML = alerts
+                .slice(0, 6)
+                .map(a => `
+
+                    <div class="alert">
+
+                        <div>
+                            <div class="alert-name">
+                                ${a.rule_name}
+                            </div>
+
+                            <div class="alert-tech">
+                                ${a.technique}
+                            </div>
+                        </div>
+
+                        <div class="badge ${a.severity.toLowerCase()}">
+                            ${a.severity}
+                        </div>
+
+                    </div>
+
+                `)
+                .join("");
+
+        }
+
+
+        const events = await fetch("/api/events")
+            .then(r => r.json());
+
+        const eventBox =
+            document.getElementById("events-list");
+
+        eventBox.innerHTML = events
+            .slice(0, 10)
+            .map(e => `
+
+                <tr>
+
+                    <td>
+                        ${e.timestamp || "-"}
+                    </td>
+
+                    <td>
+                        ${e.event_id || "-"}
+                    </td>
+
+                    <td>
+                        ${e.image
+                            ? e.image.split("\\").pop()
+                            : "-"
+                        }
+                    </td>
+
+                    <td>
+                        ${e.parent_image
+                            ? e.parent_image.split("\\").pop()
+                            : "-"
+                        }
+                    </td>
+
+                    <td>
+                        ${e.user || "-"}
+                    </td>
+
+                </tr>
+
+            `)
+            .join("");
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+loadDashboard();
+
+setInterval(loadDashboard, 5000);
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+title: Runas Execution
+id: 5c7a2e91-4b31-46d8-9a2c-1f5e7b1a1009
+status: experimental
+description: Detects Windows runas execution.
+references:
+  - https://attack.mitre.org/techniques/T1134/
+tags:
+  - attack.privilege-escalation
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    EventID: 1
+    Image|endswith:
+      - '\runas.exe'
+  condition: selection
+falsepositives:
+  - Administrative account usage
+level: medium

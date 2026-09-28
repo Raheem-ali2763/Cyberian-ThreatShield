@@ -1,0 +1,2742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Cyberian ThreatShield</title>
+
+<style>
+
+:root{
+    --bg:#050b14;
+    --panel:#0a1624;
+    --panel2:#0d1c2d;
+    --border:#18314a;
+    --text:#e8f0f7;
+    --muted:#7890a6;
+    --cyan:#42f5d7;
+    --blue:#4da3ff;
+    --red:#ff5577;
+    --orange:#ffb454;
+    --green:#42e6a4;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:
+        radial-gradient(circle at 80% 0%,#0d263b 0%,transparent 35%),
+        var(--bg);
+    color:var(--text);
+    font-family:Inter,Arial,sans-serif;
+}
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:245px;
+    border-right:1px solid var(--border);
+    background:rgba(5,12,21,.96);
+    padding:22px 15px;
+    position:fixed;
+    top:0;
+    bottom:0;
+}
+
+.brand{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    padding:5px 10px 25px;
+}
+
+.logo{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#42f5d7,#4da3ff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#031018;
+    font-weight:900;
+    box-shadow:0 0 25px #42f5d733;
+}
+
+.brand strong{
+    display:block;
+    font-size:14px;
+}
+
+.brand span{
+    color:var(--muted);
+    font-size:10px;
+}
+
+.nav-title{
+    color:#49657c;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    margin:22px 10px 8px;
+}
+
+.nav button{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:#7e95a9;
+    text-align:left;
+    padding:11px 12px;
+    border-radius:9px;
+    cursor:pointer;
+    margin:2px 0;
+    font-size:13px;
+}
+
+.nav button:hover,
+.nav button.active{
+    background:#102338;
+    color:var(--cyan);
+}
+
+.main{
+    margin-left:245px;
+    width:calc(100% - 245px);
+    padding:28px;
+}
+
+/* TOP */
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.top h1{
+    margin:0;
+    font-size:26px;
+}
+
+.top p{
+    color:var(--muted);
+    margin:6px 0 0;
+    font-size:13px;
+}
+
+.online{
+    color:var(--cyan);
+    font-size:12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.dot{
+    width:8px;
+    height:8px;
+    background:var(--cyan);
+    border-radius:50%;
+    box-shadow:0 0 12px var(--cyan);
+}
+
+/* CARDS */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.card{
+    background:linear-gradient(145deg,#0b1929,#081321);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+}
+
+.card .label{
+    color:#668197;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.card .value{
+    font-size:29px;
+    font-weight:700;
+    margin-top:10px;
+}
+
+/* PAGE */
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+/* PANELS */
+
+.grid{
+    display:grid;
+    grid-template-columns:1.3fr .7fr;
+    gap:15px;
+    margin-top:15px;
+}
+
+.panel{
+    background:linear-gradient(145deg,#0b1929,#081321);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+    margin-top:15px;
+}
+
+.panel h2{
+    margin:0 0 15px;
+    font-size:15px;
+}
+
+.table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.table th{
+    text-align:left;
+    color:#5e778d;
+    font-size:10px;
+    text-transform:uppercase;
+    padding:10px 8px;
+    border-bottom:1px solid var(--border);
+}
+
+.table td{
+    padding:11px 8px;
+    border-bottom:1px solid #12263a;
+    font-size:12px;
+}
+
+.badge{
+    display:inline-block;
+    padding:4px 8px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:700;
+}
+
+.HIGH{
+    color:#ff7c97;
+    background:#ff42651a;
+}
+
+.MEDIUM{
+    color:#ffc46c;
+    background:#ffae3b1a;
+}
+
+.LOW{
+    color:#67e6ad;
+    background:#42e6a41a;
+}
+
+.OPEN{
+    color:#ff9aab;
+}
+
+.CLOSED{
+    color:#63e6aa;
+}
+
+/* PROCESS TREE */
+
+.tree{
+    padding:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.process{
+    background:#102238;
+    border:1px solid #21445f;
+    border-radius:10px;
+    padding:12px 18px;
+    text-align:center;
+}
+
+.process small{
+    color:var(--muted);
+    display:block;
+    margin-top:4px;
+}
+
+.arrow{
+    color:var(--cyan);
+    font-size:20px;
+}
+
+/* ATT&CK */
+
+.tech{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:12px;
+}
+
+.tech-card{
+    border:1px solid var(--border);
+    background:#0a1828;
+    padding:15px;
+    border-radius:11px;
+}
+
+.tech-card strong{
+    color:var(--cyan);
+}
+
+.tech-card small{
+    color:var(--muted);
+}
+
+/* SEARCH */
+
+.search{
+    width:100%;
+    background:#07111d;
+    border:1px solid var(--border);
+    color:white;
+    padding:11px 13px;
+    border-radius:9px;
+    margin-bottom:15px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+
+    .sidebar{
+        width:190px;
+    }
+
+    .main{
+        margin-left:190px;
+        width:calc(100% - 190px);
+    }
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:700px){
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .app{
+        display:block;
+    }
+
+    .main{
+        margin:0;
+        width:100%;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- ======================================================
+SIDEBAR
+====================================================== -->
+
+<aside class="sidebar">
+
+<div class="brand">
+    <div class="logo">TS</div>
+    <div>
+        <strong>CYBERIAN</strong>
+        <span>THREATSHIELD</span>
+    </div>
+</div>
+
+<div class="nav-title">Security Operations</div>
+
+<div class="nav">
+
+<button class="active" onclick="showPage('overview',this)">
+    ◈ Overview
+</button>
+
+<button onclick="showPage('alerts',this)">
+    ⚠ Detection Alerts
+</button>
+
+<button onclick="showPage('telemetry',this)">
+    ◉ Telemetry
+</button>
+
+<button onclick="showPage('process',this)">
+    ⌁ Process Tree
+</button>
+
+</div>
+
+<div class="nav-title">Threat Intelligence</div>
+
+<div class="nav">
+
+<button onclick="showPage('mitre',this)">
+    ◇ MITRE ATT&CK
+</button>
+<button onclick="showPage('mitre',this)">
+    ◇ Security Analytics
+</button>
+<button onclick="showPage('mitre',this)">
+    ◇ Live Alert Feed
+</button>
+
+<button onclick="showPage('hunts',this)">
+    ⌕ Threat Hunting
+</button>
+
+<button onclick="showPage('iocs',this)">
+    ◇ IOC Investigation
+</button>
+
+</div>
+
+<div class="nav-title">Response</div>
+
+<div class="nav">
+
+<button onclick="showPage('incidents',this)">
+    ◫ Incidents
+</button>
+
+<button onclick="showPage('playbooks',this)">
+    ☷ IR Playbooks
+</button>
+
+</div>
+
+</aside>
+
+
+<!-- ======================================================
+MAIN
+====================================================== -->
+
+<main class="main">
+
+<header class="top">
+
+<div>
+    <h1 id="pageTitle">Security Overview</h1>
+    <p id="pageSubtitle">
+        Detection Engineering & Threat Hunting Platform
+    </p>
+</div>
+
+<div class="online">
+    <span class="dot"></span>
+    THREATSHIELD ONLINE
+</div>
+
+</header>
+
+
+<!-- ======================================================
+OVERVIEW
+====================================================== -->
+
+<section id="overview" class="page active">
+
+<div class="cards">
+
+<div class="card">
+    <div class="label">Telemetry Events</div>
+    <div class="value" id="statEvents">0</div>
+</div>
+
+<div class="card">
+    <div class="label">Detection Alerts</div>
+    <div class="value" id="statAlerts">0</div>
+</div>
+
+<div class="card">
+    <div class="label">Sigma Rules</div>
+    <div class="value">19</div>
+</div>
+
+<div class="card">
+    <div class="label">High Severity</div>
+    <div class="value" id="statHigh">0</div>
+</div>
+
+</div>
+
+
+<div class="grid">
+
+<div class="panel">
+
+<h2>Recent Detection Alerts</h2>
+
+<table class="table">
+
+<thead>
+<tr>
+<th>Detection</th>
+<th>Severity</th>
+<th>ATT&CK</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="overviewAlerts"></tbody>
+
+</table>
+
+</div>
+
+
+<div class="panel">
+
+<h2>Severity Distribution</h2>
+
+<div id="severity"></div>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>Observed Process Chain</h2>
+
+<div class="tree">
+
+<div class="process">
+    WINWORD.EXE
+    <small>Office Process</small>
+</div>
+
+<div class="arrow">→</div>
+
+<div class="process">
+    MSHTA.EXE
+    <small>T1218.005</small>
+</div>
+
+<div class="arrow">→</div>
+
+<div class="process">
+    RUNDLL32.EXE
+    <small>T1218.011</small>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+ALERTS
+====================================================== -->
+
+<section id="alerts" class="page">
+
+<div class="panel">
+
+<h2>Detection Center</h2>
+
+<input
+    class="search"
+    id="alertSearch"
+    placeholder="Search detections..."
+    oninput="filterAlerts()"
+/>
+
+<table class="table">
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Detection</th>
+<th>Severity</th>
+<th>Technique</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="alertsTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+TELEMETRY
+====================================================== -->
+
+<section id="telemetry" class="page">
+
+<div class="panel">
+
+<h2>Telemetry Explorer</h2>
+
+<input
+    class="search"
+    id="eventSearch"
+    placeholder="Search process, command or user..."
+    oninput="filterEvents()"
+/>
+
+<table class="table">
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Event</th>
+<th>Process</th>
+<th>Parent</th>
+<th>User</th>
+<th>Channel</th>
+</tr>
+</thead>
+
+<tbody id="eventsTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+PROCESS
+====================================================== -->
+
+
+<section id="process" class="page">
+
+<div class="panel">
+
+<h2>Process Tree</h2>
+
+<p style="
+color:#7890a6;
+font-size:12px;
+margin-top:-5px;
+">
+Parent-child process relationships reconstructed from
+observed Windows telemetry.
+</p>
+
+<button
+onclick="loadProcessTreeStable()"
+style="
+margin-top:15px;
+background:#42f5d7;
+color:#031018;
+border:0;
+border-radius:8px;
+padding:10px 18px;
+font-weight:700;
+cursor:pointer;
+">
+Load Process Tree
+</button>
+
+</div>
+
+
+<div class="panel">
+
+<h2>Observed Execution Chain</h2>
+
+<div
+id="stableProcessTree"
+style="
+padding:20px 5px;
+overflow-x:auto;
+">
+
+<div style="color:#7890a6">
+Click <b>Load Process Tree</b> to reconstruct
+the observed execution relationships.
+</div>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>Process Evidence</h2>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Process</th>
+<th>Events</th>
+<th>Parent Process</th>
+</tr>
+
+</thead>
+
+<tbody id="stableProcessTable">
+
+<tr>
+<td colspan="3" style="color:#7890a6">
+No process data loaded.
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+
+<!-- ======================================================
+MITRE
+====================================================== -->
+
+
+<section id="mitre" class="page">
+
+<div class="cards">
+
+<div class="card">
+<div class="label">Observed Techniques</div>
+<div class="value" id="stableMitreTechniques">0</div>
+</div>
+
+<div class="card">
+<div class="label">Detections</div>
+<div class="value" id="stableMitreDetections">0</div>
+</div>
+
+<div class="card">
+<div class="label">High Severity</div>
+<div class="value" id="stableMitreHigh">0</div>
+</div>
+
+<div class="card">
+<div class="label">Framework</div>
+<div class="value" style="font-size:20px">MITRE ATT&CK</div>
+</div>
+
+</div>
+
+<div class="panel">
+
+<h2>ATT&CK Technique Map</h2>
+
+<p style="color:#7890a6;font-size:12px;">
+Observed techniques generated from ThreatShield detections.
+</p>
+
+<button
+onclick="loadMitreStable()"
+style="
+background:#42f5d7;
+color:#031018;
+border:0;
+border-radius:8px;
+padding:10px 18px;
+font-weight:700;
+cursor:pointer;
+">
+Load ATT&CK Map
+</button>
+
+</div>
+
+<div class="panel">
+
+<div
+id="stableMitreCards"
+style="
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:14px;
+">
+
+<div style="color:#7890a6">
+Click Load ATT&CK Map.
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h2>Technique Details</h2>
+
+<table class="table">
+
+<thead>
+<tr>
+<th>Technique</th>
+<th>Name</th>
+<th>Detections</th>
+<th>Severity</th>
+</tr>
+</thead>
+
+<tbody id="stableMitreTable">
+
+<tr>
+<td colspan="4">
+No ATT&CK data loaded.
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+
+<!-- ======================================================
+HUNTS
+====================================================== -->
+
+
+<section id="hunts" class="page">
+
+<div class="panel">
+
+<h2>Threat Hunting Console</h2>
+
+<p style="
+color:#7890a6;
+font-size:12px;
+margin-top:-7px;
+">
+Search normalized telemetry for processes, commands,
+users, channels and event identifiers.
+</p>
+
+<div style="
+display:flex;
+gap:10px;
+">
+
+<input
+id="huntInput"
+class="search"
+placeholder="Example: mshta.exe, rundll32.exe, cmd.exe..."
+style="margin:0"
+onkeydown="if(event.key==='Enter')runHunt()"
+/>
+
+<button
+onclick="runHunt()"
+style="
+background:#42f5d7;
+color:#031018;
+border:0;
+border-radius:8px;
+padding:0 18px;
+font-weight:700;
+cursor:pointer;
+">
+Hunt
+</button>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>Hunt Results</h2>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Event</th>
+<th>Process</th>
+<th>Parent</th>
+<th>User</th>
+<th>Channel</th>
+<th>Command</th>
+</tr>
+
+</thead>
+
+<tbody id="huntResults">
+
+<tr>
+<td colspan="6"
+style="color:#7890a6">
+Enter a search term and run a hunt.
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<div class="panel">
+
+<h2>Observed Processes</h2>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Process</th>
+<th>Events</th>
+<th>Parent Processes</th>
+</tr>
+
+</thead>
+
+<tbody id="processResults"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+
+<!-- ======================================================
+IOCS
+====================================================== -->
+
+
+<section id="iocs" class="page">
+
+<div class="cards">
+
+<div class="card">
+<div class="label">Telemetry Events</div>
+<div class="value" id="iocEvents">0</div>
+</div>
+
+<div class="card">
+<div class="label">Observed Processes</div>
+<div class="value" id="iocProcesses">0</div>
+</div>
+
+<div class="card">
+<div class="label">Command Lines</div>
+<div class="value" id="iocCommands">0</div>
+</div>
+
+<div class="card">
+<div class="label">Users</div>
+<div class="value" id="iocUsers">0</div>
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>IOC Investigation</h2>
+
+<div style="
+display:flex;
+gap:10px;
+">
+
+<input
+id="iocInput"
+class="search"
+placeholder="Search process, file, command, user..."
+style="margin:0"
+onkeydown="if(event.key==='Enter')runIOC()"
+/>
+
+<button
+onclick="runIOC()"
+style="
+background:#42f5d7;
+color:#031018;
+border:0;
+border-radius:8px;
+padding:0 18px;
+font-weight:700;
+cursor:pointer;
+">
+Search
+</button>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>IOC Results</h2>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Type</th>
+<th>Indicator</th>
+<th>Event</th>
+<th>Source</th>
+</tr>
+
+</thead>
+
+<tbody id="iocResults">
+
+<tr>
+<td colspan="4"
+style="color:#7890a6">
+Enter an indicator to search telemetry.
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+
+<!-- ======================================================
+INCIDENTS
+====================================================== -->
+
+
+<section id="incidents" class="page">
+
+<div class="panel">
+
+<h2>Incident Management</h2>
+
+<p style="
+color:#7890a6;
+font-size:12px;
+margin-top:-7px;
+">
+Track investigations from detection to resolution.
+</p>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Incident</th>
+<th>Title</th>
+<th>Severity</th>
+<th>Status</th>
+<th>Alert</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="liveIncidentsTable">
+</tbody>
+
+</table>
+
+</div>
+
+<div class="panel">
+
+<h2>Incident Lifecycle</h2>
+
+<div style="
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+">
+
+<div class="badge OPEN">OPEN</div>
+
+<div style="color:#567086">→</div>
+
+<div class="badge MEDIUM">INVESTIGATING</div>
+
+<div style="color:#567086">→</div>
+
+<div class="badge HIGH">CONTAINED</div>
+
+<div style="color:#567086">→</div>
+
+<div class="badge LOW">RESOLVED</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ======================================================
+PLAYBOOKS
+====================================================== -->
+
+<section id="playbooks" class="page">
+
+<div class="panel">
+
+<h2>Incident Response Playbooks</h2>
+
+<table class="table">
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Playbook</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="playbooksTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+</main>
+</div>
+
+
+
+<!-- ======================================================
+INVESTIGATION MODAL
+====================================================== -->
+
+<div id="investigationModal"
+     style="
+        display:none;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.72);
+        z-index:9999;
+        overflow:auto;
+        padding:40px;
+     ">
+
+    <div style="
+        max-width:1000px;
+        margin:auto;
+        background:#081321;
+        border:1px solid #1b3850;
+        border-radius:16px;
+        box-shadow:0 25px 80px #000;
+        padding:25px;
+    ">
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+        ">
+
+            <div>
+                <div style="
+                    color:#42f5d7;
+                    font-size:10px;
+                    letter-spacing:1.5px;
+                    text-transform:uppercase;
+                ">
+                    Security Investigation
+                </div>
+
+                <h2 id="investigationTitle"
+                    style="margin:6px 0 0">
+                    Alert Investigation
+                </h2>
+            </div>
+
+            <button
+                onclick="closeInvestigation()"
+                style="
+                    background:#101f2e;
+                    color:#9db0c1;
+                    border:1px solid #1b3850;
+                    border-radius:8px;
+                    padding:8px 12px;
+                    cursor:pointer;
+                ">
+                ✕ Close
+            </button>
+
+        </div>
+
+
+        <div class="cards"
+             style="grid-template-columns:repeat(4,1fr);">
+
+            <div class="card">
+                <div class="label">Case</div>
+                <div class="value"
+                     id="invCase"
+                     style="font-size:20px">
+                    —
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="label">Severity</div>
+                <div class="value"
+                     id="invSeverity"
+                     style="font-size:20px">
+                    —
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="label">ATT&CK</div>
+                <div class="value"
+                     id="invTechnique"
+                     style="font-size:20px">
+                    —
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="label">Status</div>
+                <div class="value"
+                     id="invStatus"
+                     style="font-size:20px">
+                    —
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>Detection</h2>
+
+            <p id="invDescription"
+               style="
+                    color:#8ca2b6;
+                    font-size:13px;
+                    line-height:1.7;
+               ">
+            </p>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>Evidence</h2>
+
+            <table class="table">
+
+                <tbody>
+
+                    <tr>
+                        <th>Event ID</th>
+                        <td id="invEventId">—</td>
+                    </tr>
+
+                    <tr>
+                        <th>Provider</th>
+                        <td id="invProvider">—</td>
+                    </tr>
+
+                    <tr>
+                        <th>Channel</th>
+                        <td id="invChannel">—</td>
+                    </tr>
+
+                    <tr>
+                        <th>Timestamp</th>
+                        <td id="invTimestamp">—</td>
+                    </tr>
+
+                    <tr>
+                        <th>Process</th>
+                        <td id="invProcess">—</td>
+                    </tr>
+
+                    <tr>
+                        <th>Parent Process</th>
+                        <td id="invParent">—</td>
+                    </tr>
+
+                    <tr>
+                        <th>User</th>
+                        <td id="invUser">—</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>Command Line</h2>
+
+            <pre id="invCommand"
+                 style="
+                    white-space:pre-wrap;
+                    word-break:break-word;
+                    background:#050c14;
+                    border:1px solid #142b40;
+                    border-radius:10px;
+                    padding:15px;
+                    color:#a9c7d9;
+                    font-size:12px;
+                 ">—</pre>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>Investigator Assessment</h2>
+
+            <p id="invAssessment"
+               style="
+                    color:#9bb0c2;
+                    font-size:13px;
+                    line-height:1.7;
+               ">
+            </p>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h2>Related Detections</h2>
+
+            <div id="invRelated">
+                No related detections.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let alertData=[];
+let eventData=[];
+
+
+/* =====================================================
+PAGE NAVIGATION
+===================================================== */
+
+function showPage(id,button){
+
+    document.querySelectorAll(".page")
+        .forEach(x=>x.classList.remove("active"));
+
+    document.getElementById(id)
+        .classList.add("active");
+
+    document.querySelectorAll(".nav button")
+        .forEach(x=>x.classList.remove("active"));
+
+    button.classList.add("active");
+
+    const titles={
+        overview:["Security Overview","Detection Engineering & Threat Hunting Platform"],
+        alerts:["Detection Center","Security detections generated from telemetry"],
+        telemetry:["Telemetry Explorer","Raw normalized security telemetry"],
+        process:["Process Investigation","Parent-child execution analysis"],
+        mitre:["MITRE ATT&CK","Observed detection technique coverage"],
+        hunts:["Threat Hunting","Structured investigation workflows"],
+        iocs:["IOC Investigation","Observed indicators"],
+        incidents:["Incident Management","Security cases and response tracking"],
+        playbooks:["IR Playbooks","Incident response procedures"]
+    };
+
+    document.getElementById("pageTitle").innerText=titles[id][0];
+    document.getElementById("pageSubtitle").innerText=titles[id][1];
+}
+
+
+/* =====================================================
+FETCH HELPERS
+===================================================== */
+
+async function api(url){
+
+    try{
+        const r=await fetch(url);
+        return await r.json();
+    }
+    catch(e){
+        console.error(e);
+        return [];
+    }
+
+}
+
+
+/* =====================================================
+LOAD DASHBOARD
+===================================================== */
+
+async function loadDashboard(){
+
+    const stats=await api("/api/stats");
+
+    if(stats){
+
+        document.getElementById("statEvents").innerText=stats.events ?? 0;
+        document.getElementById("statAlerts").innerText=stats.alerts ?? 0;
+        document.getElementById("statHigh").innerText=stats.high ?? 0;
+
+        document.getElementById("severity").innerHTML=`
+
+        <div style="margin:12px 0">
+            <span class="badge HIGH">HIGH</span>
+            <strong style="float:right">${stats.high ?? 0}</strong>
+        </div>
+
+        <div style="margin:12px 0">
+            <span class="badge MEDIUM">MEDIUM</span>
+            <strong style="float:right">${stats.medium ?? 0}</strong>
+        </div>
+
+        <div style="margin:12px 0">
+            <span class="badge LOW">LOW</span>
+            <strong style="float:right">${stats.low ?? 0}</strong>
+        </div>
+
+        `;
+    }
+
+
+    alertData=await api("/api/alerts?limit=100");
+    eventData=await api("/api/events?limit=100");
+
+    renderOverviewAlerts();
+    renderAlerts();
+    renderEvents();
+
+    loadMitre();
+    loadHunts();
+    loadIOCs();
+    loadIncidents();
+    loadObservedProcesses();
+    loadIOCStats();
+    loadPlaybooks();
+}
+
+
+/* =====================================================
+ALERTS
+===================================================== */
+
+function renderOverviewAlerts(){
+
+    const body=document.getElementById("overviewAlerts");
+
+    body.innerHTML=alertData.slice(0,8).map(a=>`
+
+        <tr>
+            <td>${escapeHtml(a.title)}</td>
+            <td>
+                <span class="badge ${a.severity}">
+                    ${a.severity}
+                </span>
+            </td>
+            <td>${a.technique}</td>
+            <td class="${a.status}">
+                ${a.status}
+            </td>
+        </tr>
+
+    `).join("");
+
+}
+
+
+function renderAlerts(data=alertData){
+
+    const body=document.getElementById("alertsTable");
+
+    body.innerHTML=data.map(a=>`
+
+        <tr>
+
+            <td>#${a.id}</td>
+
+            <td>
+                <strong>${escapeHtml(a.title)}</strong>
+                <br>
+                <small style="color:#7890a6">
+                    ${escapeHtml(a.description || "")}
+                </small>
+            </td>
+
+            <td>
+                <span class="badge ${a.severity}">
+                    ${a.severity}
+                </span>
+            </td>
+
+            <td>
+                ${a.technique}
+                <br>
+                <small style="color:#7890a6">
+                    ${escapeHtml(a.technique_name || "")}
+                </small>
+            </td>
+
+            <td class="${a.status}">
+                ${a.status}
+            </td>
+
+            <td>
+                ${
+                    a.status==="OPEN"
+                    ?
+                    `<button
+                        onclick="closeAlert(${a.id})"
+                        style="background:#102b3d;color:#42f5d7;border:1px solid #1b4b61;border-radius:7px;padding:6px 9px;cursor:pointer">
+                        Close
+                    </button>`
+                    :
+                    "—"
+                }
+            </td>
+
+        </tr>
+
+    `).join("");
+
+}
+
+
+
+async function openInvestigation(id){
+
+    const modal =
+        document.getElementById("investigationModal");
+
+    modal.style.display="block";
+
+    document.getElementById("investigationTitle").innerText =
+        "Loading investigation...";
+
+    try{
+
+        const data =
+            await api(`/api/investigation/${id}`);
+
+        if(!data || !data.detection){
+
+            document.getElementById("investigationTitle")
+                .innerText="Investigation unavailable";
+
+            return;
+        }
+
+        document.getElementById("investigationTitle")
+            .innerText=data.detection.title;
+
+        document.getElementById("invCase")
+            .innerText=data.case.case_id;
+
+        document.getElementById("invSeverity")
+            .innerHTML=
+                `<span class="badge ${data.case.severity}">
+                    ${data.case.severity}
+                 </span>`;
+
+        document.getElementById("invTechnique")
+            .innerText=data.detection.technique;
+
+        document.getElementById("invStatus")
+            .innerText=data.case.status;
+
+        document.getElementById("invDescription")
+            .innerText=data.detection.description || "—";
+
+        document.getElementById("invAssessment")
+            .innerText=data.assessment || "—";
+
+
+        const e=data.evidence;
+
+        if(e){
+
+            document.getElementById("invEventId")
+                .innerText=e.event_id || "—";
+
+            document.getElementById("invProvider")
+                .innerText=e.provider || "—";
+
+            document.getElementById("invChannel")
+                .innerText=e.channel || "—";
+
+            document.getElementById("invTimestamp")
+                .innerText=e.timestamp || "—";
+
+            document.getElementById("invProcess")
+                .innerText=e.process || "—";
+
+            document.getElementById("invParent")
+                .innerText=e.parent_process || "—";
+
+            document.getElementById("invUser")
+                .innerText=e.user || "—";
+
+            document.getElementById("invCommand")
+                .innerText=e.command_line || "No command line available.";
+
+        }
+        else{
+
+            document.getElementById("invEventId")
+                .innerText="No source event";
+
+            document.getElementById("invCommand")
+                .innerText="No source telemetry available.";
+
+        }
+
+
+        const related=data.related_detections || [];
+
+        if(related.length===0){
+
+            document.getElementById("invRelated").innerHTML=
+                `<span style="color:#7890a6">
+                    No related detections.
+                 </span>`;
+
+        }
+        else{
+
+            document.getElementById("invRelated").innerHTML=
+
+                related.map(r=>`
+
+                    <div style="
+                        padding:12px;
+                        margin:7px 0;
+                        background:#0b1929;
+                        border:1px solid #18314a;
+                        border-radius:9px;
+                    ">
+
+                        <strong>
+                            #${r.id} — ${escapeHtml(r.title)}
+                        </strong>
+
+                        <span
+                            class="badge ${r.severity}"
+                            style="margin-left:8px">
+                            ${r.severity}
+                        </span>
+
+                        <div style="
+                            color:#7890a6;
+                            margin-top:5px;
+                            font-size:11px;
+                        ">
+                            ${r.technique}
+                        </div>
+
+                    </div>
+
+                `).join("");
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        document.getElementById("investigationTitle")
+            .innerText="Investigation error";
+
+    }
+
+}
+
+
+function closeInvestigation(){
+
+    document.getElementById("investigationModal")
+        .style.display="none";
+
+}
+
+
+
+
+async function runHunt(){
+
+    const input =
+        document.getElementById("huntInput");
+
+    const q =
+        input.value.trim();
+
+    if(!q)
+        return;
+
+    const data =
+        await api(
+            `/api/hunt/search?q=${encodeURIComponent(q)}`
+        );
+
+    const body =
+        document.getElementById("huntResults");
+
+    if(!data.length){
+
+        body.innerHTML=`
+        <tr>
+            <td colspan="6"
+            style="color:#7890a6">
+            No matching telemetry found.
+            </td>
+        </tr>`;
+
+        return;
+    }
+
+    body.innerHTML =
+        data.map(e=>`
+
+        <tr>
+
+            <td>#${e.id}</td>
+
+            <td>
+                <strong>
+                    ${escapeHtml(e.image || "—")}
+                </strong>
+            </td>
+
+            <td>
+                ${escapeHtml(e.parent_image || "—")}
+            </td>
+
+            <td>
+                ${escapeHtml(e.user || "—")}
+            </td>
+
+            <td>
+                ${escapeHtml(e.channel || "—")}
+            </td>
+
+            <td>
+                <small>
+                    ${escapeHtml(
+                        (e.command_line || "—")
+                        .slice(0,120)
+                    )}
+                </small>
+            </td>
+
+        </tr>
+
+        `).join("");
+
+}
+
+
+async function loadObservedProcesses(){
+
+    const data =
+        await api("/api/hunt/processes");
+
+    const body =
+        document.getElementById(
+            "processResults"
+        );
+
+    if(!body)
+        return;
+
+    body.innerHTML =
+        data.map(p=>`
+
+        <tr>
+
+            <td>
+                <strong>
+                    ${escapeHtml(p.process)}
+                </strong>
+            </td>
+
+            <td>
+                ${p.count}
+            </td>
+
+            <td>
+                ${p.parents.length
+                    ?
+                    p.parents
+                        .map(x=>escapeHtml(x))
+                        .join("<br>")
+                    :
+                    "—"
+                }
+            </td>
+
+        </tr>
+
+        `).join("");
+
+}
+
+
+async function runIOC(){
+
+    const input =
+        document.getElementById("iocInput");
+
+    const q =
+        input.value.trim();
+
+    if(!q)
+        return;
+
+    const data =
+        await api(
+            `/api/ioc/search?q=${encodeURIComponent(q)}`
+        );
+
+    const body =
+        document.getElementById(
+            "iocResults"
+        );
+
+    if(!data.length){
+
+        body.innerHTML=`
+        <tr>
+            <td colspan="4"
+            style="color:#7890a6">
+            No matching indicators found.
+            </td>
+        </tr>`;
+
+        return;
+    }
+
+    body.innerHTML =
+        data.map(i=>`
+
+        <tr>
+
+            <td>
+                <span class="badge MEDIUM">
+                    ${escapeHtml(i.type)}
+                </span>
+            </td>
+
+            <td>
+                <code>
+                    ${escapeHtml(i.value)}
+                </code>
+            </td>
+
+            <td>
+                #${i.event_id}
+            </td>
+
+            <td>
+                ${escapeHtml(i.source)}
+            </td>
+
+        </tr>
+
+        `).join("");
+
+}
+
+
+async function loadIOCStats(){
+
+    const data =
+        await api("/api/ioc/summary");
+
+    if(!data)
+        return;
+
+    const events =
+        document.getElementById("iocEvents");
+
+    const processes =
+        document.getElementById("iocProcesses");
+
+    const commands =
+        document.getElementById("iocCommands");
+
+    const users =
+        document.getElementById("iocUsers");
+
+    if(events)
+        events.innerText=data.events;
+
+    if(processes)
+        processes.innerText=data.processes;
+
+    if(commands)
+        commands.innerText=data.commands;
+
+    if(users)
+        users.innerText=data.users;
+
+}
+
+
+
+async function closeAlert(id){
+
+    await fetch(
+        `/api/alerts/${id}/close`,
+        {method:"POST"}
+    );
+
+    await loadDashboard();
+
+}
+
+
+/* =====================================================
+EVENTS
+===================================================== */
+
+function renderEvents(data=eventData){
+
+    const body=document.getElementById("eventsTable");
+
+    body.innerHTML=data.map(e=>`
+
+        <tr>
+
+            <td>#${e.id}</td>
+
+            <td>${e.event_id}</td>
+
+            <td>
+                <strong>${escapeHtml(e.image || "—")}</strong>
+                <br>
+                <small style="color:#7890a6">
+                    ${escapeHtml(e.command_line || "").slice(0,100)}
+                </small>
+            </td>
+
+            <td>${escapeHtml(e.parent_image || "—")}</td>
+
+            <td>${escapeHtml(e.user || "—")}</td>
+
+            <td>${escapeHtml(e.channel || "—")}</td>
+
+        </tr>
+
+    `).join("");
+
+}
+
+
+/* =====================================================
+SEARCH
+===================================================== */
+
+function filterAlerts(){
+
+    const q=document
+        .getElementById("alertSearch")
+        .value
+        .toLowerCase();
+
+    renderAlerts(
+        alertData.filter(a=>
+            JSON.stringify(a)
+            .toLowerCase()
+            .includes(q)
+        )
+    );
+
+}
+
+
+function filterEvents(){
+
+    const q=document
+        .getElementById("eventSearch")
+        .value
+        .toLowerCase();
+
+    renderEvents(
+        eventData.filter(e=>
+            JSON.stringify(e)
+            .toLowerCase()
+            .includes(q)
+        )
+    );
+
+}
+
+
+/* =====================================================
+MITRE
+===================================================== */
+
+async function loadMitre(){
+
+    const data=await api("/api/mitre");
+
+    document.getElementById("mitreGrid").innerHTML=
+
+        data.map(t=>`
+
+        <div class="tech-card">
+
+            <strong>${t.id}</strong>
+
+            <h3 style="margin:8px 0;font-size:14px">
+                ${escapeHtml(t.name)}
+            </h3>
+
+            <small>
+                Observed detections: ${t.count}
+            </small>
+
+        </div>
+
+        `).join("");
+
+}
+
+
+/* =====================================================
+HUNTS
+===================================================== */
+
+async function loadHunts(){
+
+    const data=await api("/api/hunts");
+
+    document.getElementById("huntsTable").innerHTML=
+
+        data.map(h=>`
+
+        <tr>
+
+            <td>
+                <strong>${h.id}</strong>
+                <br>
+                ${escapeHtml(h.title)}
+            </td>
+
+            <td class="${h.status}">
+                ${h.status}
+            </td>
+
+            <td>${escapeHtml(h.finding)}</td>
+
+        </tr>
+
+        `).join("");
+
+}
+
+
+/* =====================================================
+IOCS
+===================================================== */
+
+async function loadIOCs(){
+
+    const data=await api("/api/iocs");
+
+    document.getElementById("iocsTable").innerHTML=
+
+        data.map(i=>`
+
+        <tr>
+
+            <td>${i.type}</td>
+
+            <td>
+                <code>${escapeHtml(i.value)}</code>
+            </td>
+
+            <td>${escapeHtml(i.source)}</td>
+
+            <td>${i.status}</td>
+
+        </tr>
+
+        `).join("");
+
+}
+
+
+/* =====================================================
+INCIDENTS
+===================================================== */
+
+async function loadIncidents(){
+
+    const data=await api("/api/incidents");
+
+    document.getElementById("incidentsTable").innerHTML=
+
+        data.map(i=>`
+
+        <tr>
+
+            <td>
+                <strong>${i.id}</strong>
+                <br>
+                ${escapeHtml(i.title)}
+            </td>
+
+            <td>
+                <span class="badge ${i.severity}">
+                    ${i.severity}
+                </span>
+            </td>
+
+            <td>${i.status}</td>
+
+            <td>${i.alerts}</td>
+
+            <td>${escapeHtml(i.description)}</td>
+
+        </tr>
+
+        `).join("");
+
+}
+
+
+/* =====================================================
+PLAYBOOKS
+===================================================== */
+
+async function loadPlaybooks(){
+
+    const data=await api("/api/playbooks");
+
+    document.getElementById("playbooksTable").innerHTML=
+
+        data.map(p=>`
+
+        <tr>
+
+            <td>${p.id}</td>
+
+            <td>${escapeHtml(p.name)}</td>
+
+            <td class="CLOSED">${p.status}</td>
+
+        </tr>
+
+        `).join("");
+
+}
+
+
+/* =====================================================
+HTML ESCAPE
+===================================================== */
+
+function escapeHtml(value){
+
+    if(value===null || value===undefined)
+        return "";
+
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+/* =====================================================
+WEBSOCKET LIVE UPDATES
+===================================================== */
+
+function connectLive(){
+
+    try{
+
+        const protocol=
+            location.protocol==="https:"
+            ? "wss://"
+            : "ws://";
+
+        const ws=new WebSocket(
+            protocol + location.host + "/ws"
+        );
+
+        ws.onmessage=()=>{
+
+            loadDashboard();
+
+        };
+
+        ws.onclose=()=>{
+
+            setTimeout(connectLive,3000);
+
+        };
+
+    }
+    catch(e){
+
+        console.log("Live connection unavailable.");
+
+    }
+
+}
+
+
+/* =====================================================
+START
+===================================================== */
+
+loadDashboard();
+connectLive();
+
+setInterval(loadDashboard,5000);
+
+</script>
+
+
+<script>
+
+async function loadMitreStable(){
+
+    const cards =
+        document.getElementById(
+            "stableMitreCards"
+        );
+
+    const table =
+        document.getElementById(
+            "stableMitreTable"
+        );
+
+    if(!cards || !table){
+        return;
+    }
+
+    cards.innerHTML =
+        '<div style="color:#42f5d7">Loading ATT&CK data...</div>';
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/alerts?limit=200"
+            );
+
+        if(!response.ok){
+
+            throw new Error(
+                "Alert API error: " +
+                response.status
+            );
+
+        }
+
+        const alerts =
+            await response.json();
+
+        const techniques = {};
+
+
+        alerts.forEach(function(alert){
+
+            const id =
+                alert.technique || "Unknown";
+
+            const name =
+                alert.technique_name ||
+                "Unknown Technique";
+
+            if(!techniques[id]){
+
+                techniques[id] = {
+                    id:id,
+                    name:name,
+                    count:0,
+                    severity:"LOW"
+                };
+
+            }
+
+            techniques[id].count++;
+
+            if(
+                alert.severity === "HIGH"
+            ){
+
+                techniques[id].severity =
+                    "HIGH";
+
+            }
+            else if(
+                alert.severity === "MEDIUM" &&
+                techniques[id].severity !== "HIGH"
+            ){
+
+                techniques[id].severity =
+                    "MEDIUM";
+
+            }
+
+        });
+
+
+        const data =
+            Object.values(techniques);
+
+
+        document.getElementById(
+            "stableMitreTechniques"
+        ).innerText =
+            data.length;
+
+
+        document.getElementById(
+            "stableMitreDetections"
+        ).innerText =
+            alerts.length;
+
+
+        document.getElementById(
+            "stableMitreHigh"
+        ).innerText =
+            alerts.filter(
+                function(a){
+                    return a.severity === "HIGH";
+                }
+            ).length;
+
+
+        if(data.length === 0){
+
+            cards.innerHTML =
+                '<div style="color:#7890a6">' +
+                'No ATT&CK techniques observed.' +
+                '</div>';
+
+            table.innerHTML = "";
+
+            return;
+        }
+
+
+        cards.innerHTML =
+            data.map(function(t){
+
+                return `
+
+                <div style="
+                    background:
+                    linear-gradient(
+                        145deg,
+                        #0c1d2e,
+                        #081522
+                    );
+                    border:1px solid #18344c;
+                    border-radius:12px;
+                    padding:20px;
+                ">
+
+                    <div style="
+                        color:#42f5d7;
+                        font-size:12px;
+                        font-weight:800;
+                    ">
+                        ${t.id}
+                    </div>
+
+                    <div style="
+                        margin-top:8px;
+                        font-size:15px;
+                        font-weight:700;
+                    ">
+                        ${t.name}
+                    </div>
+
+                    <div style="
+                        color:#7890a6;
+                        font-size:11px;
+                        margin-top:10px;
+                    ">
+                        ${t.count} detection(s)
+                    </div>
+
+                    <div style="
+                        margin-top:12px;
+                        display:inline-block;
+                        padding:4px 8px;
+                        border-radius:5px;
+                        background:#102b3d;
+                        color:#42f5d7;
+                        font-size:10px;
+                    ">
+                        ${t.severity}
+                    </div>
+
+                </div>
+
+                `;
+
+            }).join("");
+
+
+        table.innerHTML =
+            data.map(function(t){
+
+                return `
+
+                <tr>
+
+                    <td>
+                        <strong
+                        style="color:#42f5d7">
+                            ${t.id}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${t.name}
+                    </td>
+
+                    <td>
+                        ${t.count}
+                    </td>
+
+                    <td>
+                        <span
+                        class="badge ${t.severity}">
+                            ${t.severity}
+                        </span>
+                    </td>
+
+                </tr>
+
+                `;
+
+            }).join("");
+
+
+    }catch(error){
+
+        console.error(
+            "MITRE error:",
+            error
+        );
+
+        cards.innerHTML =
+            '<div style="color:#ff7185">' +
+            'Unable to load ATT&CK data.' +
+            '</div>';
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
+
+<script>
+async function loadChartsStable() {
+    try {
+        const response = await fetch('/api/alerts?limit=200');
+        const data = await response.json();
+
+        const alerts = Array.isArray(data) ? data : (data.alerts || []);
+
+        let high = 0, medium = 0, low = 0;
+        const techniques = {};
+
+        alerts.forEach(a => {
+            const sev = String(a.severity || a.level || '').toUpperCase();
+
+            if (sev === 'HIGH') high++;
+            else if (sev === 'MEDIUM') medium++;
+            else if (sev === 'LOW') low++;
+
+            const technique =
+                a.mitre_technique ||
+                a.technique ||
+                a.attack_technique ||
+                a.mitre ||
+                'Unknown';
+
+            techniques[technique] = (techniques[technique] || 0) + 1;
+        });
+
+        const total = alerts.length;
+
+        const setText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        };
+
+        setText('chartTotalAlerts', total);
+        setText('chartHighAlerts', high);
+        setText('chartMediumAlerts', medium);
+        setText('chartLowAlerts', low);
+
+        const max = Math.max(high, medium, low, 1);
+
+        const chart = document.getElementById('severityChart');
+
+        if (chart) {
+            chart.innerHTML = '';
+
+            [
+                ['HIGH', high],
+                ['MEDIUM', medium],
+                ['LOW', low]
+            ].forEach(([name, value]) => {
+                const wrapper = document.createElement('div');
+                wrapper.style.cssText =
+                    'flex:1;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:8px';
+
+                const bar = document.createElement('div');
+                bar.style.cssText =
+                    `width:65%;height:${Math.max(12, (value/max)*170)}px;border-radius:8px 8px 2px 2px;background:linear-gradient(180deg,#00e5ff,#5865f2);transition:.3s`;
+
+                const label = document.createElement('div');
+                label.textContent = `${name} (${value})`;
+
+                wrapper.appendChild(bar);
+                wrapper.appendChild(label);
+                chart.appendChild(wrapper);
+            });
+        }
+
+        const tc = document.getElementById('techniqueChart');
+
+        if (tc) {
+            tc.innerHTML = '';
+
+            Object.entries(techniques)
+                .sort((a,b) => b[1] - a[1])
+                .slice(0,10)
+                .forEach(([tech, count]) => {
+                    const row = document.createElement('div');
+                    row.style.cssText =
+                        'display:flex;align-items:center;gap:15px;margin:14px 0';
+
+                    const label = document.createElement('div');
+                    label.style.cssText =
+                        'width:180px;font-weight:600';
+                    label.textContent = tech;
+
+                    const track = document.createElement('div');
+                    track.style.cssText =
+                        'flex:1;height:10px;background:#182235;border-radius:10px;overflow:hidden';
+
+                    const bar = document.createElement('div');
+                    bar.style.cssText =
+                        `height:100%;width:${Math.max(5,(count/Math.max(...Object.values(techniques)))*100)}%;background:linear-gradient(90deg,#00e5ff,#5865f2);border-radius:10px`;
+
+                    const value = document.createElement('span');
+                    value.textContent = count;
+
+                    track.appendChild(bar);
+                    row.appendChild(label);
+                    row.appendChild(track);
+                    row.appendChild(value);
+                    tc.appendChild(row);
+                });
+        }
+
+    } catch (e) {
+        console.error('Analytics error:', e);
+    }
+}
+
+
+async function loadLiveFeedStable() {
+    try {
+        const response = await fetch('/api/alerts?limit=50');
+        const data = await response.json();
+
+        const alerts = Array.isArray(data) ? data : (data.alerts || []);
+        const feed = document.getElementById('liveAlertFeed');
+
+        if (!feed) return;
+
+        if (!alerts.length) {
+            feed.innerHTML =
+                '<div class="empty-state">No detection alerts available.</div>';
+            return;
+        }
+
+        feed.innerHTML = '';
+
+        alerts.slice(0,25).forEach((a, index) => {
+            const severity =
+                String(a.severity || a.level || 'INFO').toUpperCase();
+
+            const title =
+                a.title ||
+                a.rule_name ||
+                a.rule ||
+                a.detection ||
+                'Detection Alert';
+
+            const technique =
+                a.mitre_technique ||
+                a.technique ||
+                a.attack_technique ||
+                'Unmapped';
+
+            const time =
+                a.timestamp ||
+                a.created_at ||
+                a.time ||
+                'Unknown time';
+
+            const item = document.createElement('div');
+
+            item.style.cssText =
+                'display:grid;grid-template-columns:90px 1fr 150px 180px;gap:15px;padding:15px 10px;border-bottom:1px solid rgba(255,255,255,.07);align-items:center';
+
+            item.innerHTML = `
+                <span style="font-weight:700">${severity}</span>
+                <span>
+                    <strong>${escapeHtmlStable(title)}</strong>
+                    <br>
+                    <small style="opacity:.65">${escapeHtmlStable(technique)}</small>
+                </span>
+                <span>${escapeHtmlStable(time)}</span>
+                <span style="opacity:.7">Alert #${index + 1}</span>
+            `;
+
+            feed.appendChild(item);
+        });
+
+        const status = document.getElementById('liveFeedStatus');
+        if (status) status.textContent = '● Live Monitoring';
+
+    } catch (e) {
+        console.error('Live feed error:', e);
+
+        const status = document.getElementById('liveFeedStatus');
+        if (status) status.textContent = '● Feed Error';
+    }
+}
+
+
+function escapeHtmlStable(value) {
+    return String(value)
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'","&#039;");
+}
+
+
+setInterval(() => {
+    const page = document.querySelector('.page.active');
+
+    if (page && page.id === 'livefeed') {
+        loadLiveFeedStable();
+    }
+
+    if (page && page.id === 'charts') {
+        loadChartsStable();
+    }
+}, 10000);
+</script>

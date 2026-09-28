@@ -1,0 +1,21 @@
+title: Suspicious MSHTA Execution
+id: 7c3a7c20-6b3b-4e90-9c9d-0c6c9e7e1001
+status: experimental
+description: Detects MSHTA process execution in Sysmon process creation telemetry.
+references:
+  - https://attack.mitre.org/techniques/T1218/005/
+tags:
+  - attack.defense-evasion
+  - attack.t1218.005
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    EventID: 1
+    Image|endswith:
+      - '\mshta.exe'
+  condition: selection
+falsepositives:
+  - Legitimate administrative or application use of Microsoft HTML Application Host
+level: medium

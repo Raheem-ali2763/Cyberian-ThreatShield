@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.env.*
+*.log
+*.swp
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+
+# Runtime database
+application/data/*.db
+
+# Large raw telemetry
+datasets/**/*.evtx
+datasets/**/*.zip
+datasets/**/*.7z

@@ -1,0 +1,21 @@
+title: Scheduled Task Utility Execution
+id: 7b4e2c61-9a31-45d8-8f2c-1d5a6b1a1011
+status: experimental
+description: Detects Windows Scheduled Task utility execution.
+references:
+  - https://attack.mitre.org/techniques/T1053/005/
+tags:
+  - attack.persistence
+  - attack.t1053.005
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    EventID: 1
+    Image|endswith:
+      - '\schtasks.exe'
+  condition: selection
+falsepositives:
+  - Legitimate scheduled task administration
+level: medium

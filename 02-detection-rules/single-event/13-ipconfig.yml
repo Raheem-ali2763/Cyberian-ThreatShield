@@ -1,0 +1,21 @@
+title: Windows Network Configuration Discovery
+id: 8c4a2e71-5d31-46b9-9f2c-1a7e5b1a1013
+status: experimental
+description: Detects ipconfig execution.
+references:
+  - https://attack.mitre.org/techniques/T1016/
+tags:
+  - attack.discovery
+  - attack.t1016
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    EventID: 1
+    Image|endswith:
+      - '\ipconfig.exe'
+  condition: selection
+falsepositives:
+  - Network troubleshooting
+level: low
