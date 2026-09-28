@@ -17,3 +17,6 @@ application/data/*.db
 datasets/**/*.evtx
 datasets/**/*.zip
 datasets/**/*.7z
+
+# Local development backups
+backups/

@@ -1,0 +1,25 @@
+# ==========================================
+# Cyberian ThreatShield
+# Core Application Dependencies
+# ==========================================
+
+# Web API
+fastapi==0.135.3
+uvicorn==0.38.0
+
+# Database
+SQLAlchemy==2.0.48
+
+# API / Form Handling
+python-multipart==0.0.26
+
+# Data Processing
+pandas==2.3.3
+numpy==2.3.5
+PyYAML==6.0.3
+
+# Windows Event Log Processing
+python-evtx
+
+# Testing
+pytest==9.0.3
