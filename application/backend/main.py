@@ -1319,6 +1319,134 @@ def ioc_summary():
         db.close()
 
 
+
+# ============================================================
+# AUTOMATIC DEMO DATA BOOTSTRAP
+# ============================================================
+
+@app.on_event("startup")
+def bootstrap_demo_data():
+    """
+    Automatically restore the bundled demo telemetry when the
+    database is empty. This makes the deployed demo recover
+    after a Render restart/cold start without creating duplicates.
+    """
+    db = SessionLocal()
+
+    try:
+        existing_events = db.query(Event).count()
+
+        if existing_events > 0:
+            print(
+                f"ThreatShield startup: database already contains "
+                f"{existing_events} events; skipping demo bootstrap."
+            )
+            return
+
+        jsonl = (
+            BASE_DIR.parent
+            / "datasets"
+            / "processed"
+            / "maldoc_mshta_sample.jsonl"
+        )
+
+        if not jsonl.exists():
+            print(
+                f"ThreatShield startup: demo sample not found: {jsonl}"
+            )
+            return
+
+        inserted = 0
+
+        with open(jsonl, "r", errors="ignore") as f:
+            for line in f:
+                line = line.strip()
+
+                if not line:
+                    continue
+
+                try:
+                    data = json.loads(line)
+                except Exception:
+                    continue
+
+                event_data = data.get("event_data") or {}
+
+                event = Event(
+                    event_id=str(
+                        data.get("event_id")
+                        or data.get("EventID")
+                        or ""
+                    ),
+                    provider=str(
+                        data.get("provider")
+                        or data.get("Provider")
+                        or ""
+                    ),
+                    channel=str(
+                        data.get("channel")
+                        or data.get("Channel")
+                        or ""
+                    ),
+                    image=str(
+                        event_data.get("Image")
+                        or event_data.get("ProcessName")
+                        or data.get("Image")
+                        or ""
+                    ),
+                    command_line=str(
+                        event_data.get("CommandLine")
+                        or data.get("CommandLine")
+                        or ""
+                    ),
+                    parent_image=str(
+                        event_data.get("ParentImage")
+                        or data.get("ParentImage")
+                        or ""
+                    ),
+                    parent_command_line=str(
+                        event_data.get("ParentCommandLine")
+                        or data.get("ParentCommandLine")
+                        or ""
+                    ),
+                    user=str(
+                        event_data.get("User")
+                        or event_data.get("SubjectUserName")
+                        or data.get("User")
+                        or ""
+                    ),
+                    timestamp=str(
+                        data.get("timestamp")
+                        or data.get("UtcTime")
+                        or event_data.get("UtcTime")
+                        or data.get("TimeCreated")
+                        or ""
+                    ),
+                    raw_json=json.dumps(data)
+                )
+
+                db.add(event)
+                db.flush()
+
+                run_detection(db, event)
+                inserted += 1
+
+        db.commit()
+
+        print(
+            f"ThreatShield startup: automatically loaded "
+            f"{inserted} demo events and generated "
+            f"{db.query(Alert).count()} alerts."
+        )
+
+    except Exception as exc:
+        db.rollback()
+        print(f"ThreatShield startup bootstrap error: {exc}")
+
+    finally:
+        db.close()
+
+
 # ============================================================
 # WEBSOCKET
 # ============================================================
